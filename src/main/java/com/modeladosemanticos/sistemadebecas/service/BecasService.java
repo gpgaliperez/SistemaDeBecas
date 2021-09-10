@@ -24,7 +24,10 @@ public class BecasService implements IBecasService{
     public BecaDTO newBeca(AlumnoDTO alumnoDTO) {
 
         Padre padre = mapper.map(alumnoDTO.getPadre(), Padre.class );
-        Hermano hermano = mapper.map(alumnoDTO.getHermano(), Hermano.class);
+        List<Hermano> hermano = mapper.map(alumnoDTO.getHermano(), Hermano.class);
+        alumnoDTO.stream().map( a -> )
+
+
         return null;
     }
 

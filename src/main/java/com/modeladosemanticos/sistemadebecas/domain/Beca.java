@@ -2,9 +2,16 @@ package com.modeladosemanticos.sistemadebecas.domain;
 
 import com.modeladosemanticos.sistemadebecas.domain.enums.EstadoBeca;
 import com.modeladosemanticos.sistemadebecas.domain.enums.TipoBeca;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import javax.persistence.*;
 
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 public class Beca {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +23,8 @@ public class Beca {
     @Enumerated(EnumType.STRING)
     private TipoBeca tipoBeca;
     private Integer cantidadHermanos;
-
+    @OneToOne(mappedBy = "beca")
+    private Alumno alumno;
 
     public Beca() {
     }
@@ -29,51 +37,5 @@ public class Beca {
         this.cantidadHermanos = cantidadHermanos;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Boolean getPoseeEnfermedad() {
-        return poseeEnfermedad;
-    }
-
-    public void setPoseeEnfermedad(Boolean poseeEnfermedad) {
-        this.poseeEnfermedad = poseeEnfermedad;
-    }
-
-    public Double getDiferenciaIngresosGastos() {
-        return diferenciaIngresosGastos;
-    }
-
-    public void setDiferenciaIngresosGastos(Double diferenciaIngresosGastos) {
-        this.diferenciaIngresosGastos = diferenciaIngresosGastos;
-    }
-
-    public EstadoBeca getEstadoBeca() {
-        return estadoBeca;
-    }
-
-    public void setEstadoBeca(EstadoBeca estadoBeca) {
-        this.estadoBeca = estadoBeca;
-    }
-
-    public TipoBeca getTipoBeca() {
-        return tipoBeca;
-    }
-
-    public void setTipoBeca(TipoBeca tipoBeca) {
-        this.tipoBeca = tipoBeca;
-    }
-
-    public Integer getCantidadHermanos() {
-        return cantidadHermanos;
-    }
-
-    public void setCantidadHermanos(Integer cantidadHermanos) {
-        this.cantidadHermanos = cantidadHermanos;
-    }
 }

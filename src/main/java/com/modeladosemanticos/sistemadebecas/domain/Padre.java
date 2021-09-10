@@ -1,7 +1,16 @@
 package com.modeladosemanticos.sistemadebecas.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Padre {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,5 +22,8 @@ public class Padre {
     private String direccionTrabajo;
     private Double ingresosNetos;
     private Boolean convive;
-    private Alumno alumno; //ver relacion
+
+    @ManyToOne
+    @JoinColumn(name="children_id")
+    private Alumno alumno;
 }

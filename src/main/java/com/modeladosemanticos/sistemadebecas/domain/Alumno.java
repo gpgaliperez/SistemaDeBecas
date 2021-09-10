@@ -1,6 +1,10 @@
 package com.modeladosemanticos.sistemadebecas.domain;
 
 import com.modeladosemanticos.sistemadebecas.domain.enums.Turno;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -24,10 +28,20 @@ public class Alumno {
     private Turno turno;
     private Integer grado;
 
-    //Ver de que lado van las relaciones:
     @OneToOne
     @JoinColumn(name = "nro_beca")
     private Beca beca;
-    //private Instituto instituto;
-    //Falta padres y hnos
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id")
+    private Instituto instituto;
+
+    @OneToMany
+    @JoinColumn(name = "sibling_id")
+    private List<Hermano> hermano;
+
+    @OneToMany
+    @JoinColumn(name = "parent_id")
+    private List<Padre> padre;
+
 }
