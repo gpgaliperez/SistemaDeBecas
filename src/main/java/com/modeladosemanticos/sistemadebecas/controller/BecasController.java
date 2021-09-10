@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.modeladosemanticos.sistemadebecas.service.BecasService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/beca")
 public class BecasController {
@@ -27,14 +25,43 @@ public class BecasController {
         return null;
     }
 
-    @GetMapping(path = "/alumno/{id}")
-    public ResponseEntity<BecaDTO> findByAlumno(@PathVariable Integer id){
-        return new ResponseEntity(becaSrv.findByAlumno(id), HttpStatus.OK);
-    }
-
     @GetMapping(path = "/{id}")
     public ResponseEntity<BecaDTO> findById(@PathVariable Integer id) {
-        return new ResponseEntity(becaSrv.findById(id), HttpStatus.OK);
+        try {
+            return new ResponseEntity(becaSrv.findById(id), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    @GetMapping(path = "/alumno/{id}")
+    public ResponseEntity<BecaDTO> findByAlumno(@PathVariable Integer id){
+        try {
+            return new ResponseEntity(becaSrv.findByAlumno(id), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping(path = "/instituto/{cue}")
+    public ResponseEntity<BecaDTO> findByInstituto(@PathVariable Integer cue){
+        try {
+            return new ResponseEntity(becaSrv.findByInstituto(cue), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Integer id){
+        try {
+            return new ResponseEntity(becaSrv.deleteById(id), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

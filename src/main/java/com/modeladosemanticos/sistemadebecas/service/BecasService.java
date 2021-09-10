@@ -5,7 +5,6 @@ import com.modeladosemanticos.sistemadebecas.domain.Beca;
 import com.modeladosemanticos.sistemadebecas.domain.Hermano;
 import com.modeladosemanticos.sistemadebecas.domain.Padre;
 import com.modeladosemanticos.sistemadebecas.domain.enums.EstadoBeca;
-import com.modeladosemanticos.sistemadebecas.domain.enums.TipoBeca;
 import com.modeladosemanticos.sistemadebecas.dto.AlumnoDTO;
 import com.modeladosemanticos.sistemadebecas.dto.BecaDTO;
 import com.modeladosemanticos.sistemadebecas.dto.FormularioDTO;
@@ -14,10 +13,9 @@ import com.modeladosemanticos.sistemadebecas.repository.AlumnoRepository;
 import com.modeladosemanticos.sistemadebecas.repository.BecasRepository;
 import com.modeladosemanticos.sistemadebecas.repository.InstitutoRepository;
 import org.dozer.DozerBeanMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +53,7 @@ public class BecasService implements IBecasService{
             ingresoFamiliar+= p.getIngresosNetos();
         }
         diferenciaIngesosGastos = ingresoFamiliar - formularioDTO.getDiferenciaIngresosGastos();
+        //FIXME - deberíamos pasarles gastos en el FormularioDTO?
 
         //CONTAR CANT HERMANOS
         Integer cantHermanos = hermanos.size();
@@ -73,42 +72,46 @@ public class BecasService implements IBecasService{
         return mapper.map(newBeca, BecaDTO.class);
     }
 
-    public BecaDTO findByAlumno(Integer id){
-        try{
-            if(alumnoRepository.findById(id).isPresent()){
-                Alumno a = alumnoRepository.findById(id).get();
+    public BecaDTO findById(Integer id) throws ResourceNotFoundException {
+        if(becasRepository.findById(id).isPresent())
+            return mapper.map(becasRepository.findById(id).get(), BecaDTO.class);
+        else
+            throw new ResourceNotFoundException("Error, la beca de id: " +id+ " no se encontró.");
+    }
 
-                if(becasRepository.findByAlumno(a).isPresent())
-                    return mapper.map(becasRepository.findByAlumno(a).get(), BecaDTO.class);
-                else
-                    return null;
-            }else{
-                return null;
-            }
-        } catch ( Exception exception){
-            System.out.println(exception.getMessage());
+    public BecaDTO findByAlumno(Integer id) throws ResourceNotFoundException {
+        if(alumnoRepository.findById(id).isPresent()){
+            Alumno a = alumnoRepository.findById(id).get();
+
+            if(becasRepository.findByAlumno(a).isPresent())
+                return mapper.map(becasRepository.findByAlumno(a).get(), BecaDTO.class);
+
             return null;
+        }else{
+            throw new ResourceNotFoundException("Error, el alumno de id: " +id+ " no se encontró.");
         }
     }
 
-    public BecaDTO findById(Integer id){
-        try{
-            if(becasRepository.findById(id).isPresent())
-                return mapper.map(becasRepository.findById(id).get(), BecaDTO.class);
-            else
-                return null;
-        } catch ( Exception exception){
-            System.out.println(exception.getMessage());
-            return null;
+    public List<BecaDTO> findByInstituto(Integer cue) throws ResourceNotFoundException {
+        if(institutoRepository.findById(cue).isPresent()) {
+            List<Alumno> alumnosDeInstituto = institutoRepository.findById(cue).get().getAlumnos();
+
+            List<BecaDTO> becas = new ArrayList<>();
+            alumnosDeInstituto.forEach(alumno -> becas.add(mapper.map(alumno.getBeca(), BecaDTO.class )));
+
+            return becas;
+        }else {
+            throw new ResourceNotFoundException("Error, no se encontró el instituto de cue " + cue);
         }
     }
 
+    public boolean deleteById(Integer id) throws ResourceNotFoundException{
+        if(becasRepository.findById(id).isPresent()) {
+            becasRepository.delete(becasRepository.findById(id).get());
 
-    /*
-    HACER QUERY
-    Para devolver cantidad de hermanos
-    Para devolver la resta entre ingresos-gastos
-    SETEAR TODAS LAS BECAS CREADAS COMO EN REVISIÓN
-     */
-
+            return !becasRepository.findById(id).isPresent();
+        }else {
+            throw new ResourceNotFoundException("Error, la beca de id: " + id + " no existe.");
+        }
+    }
 }

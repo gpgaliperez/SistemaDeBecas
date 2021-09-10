@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PadreDTO {
-
     private String nombre;
     private String apellido;
     private Integer edad;

@@ -10,12 +10,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.Date;
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlumnoDTO {
-
     private String nombre;
     private String apellido;
     private Integer dni;

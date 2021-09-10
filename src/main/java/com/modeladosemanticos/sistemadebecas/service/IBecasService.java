@@ -9,6 +9,8 @@ import java.util.List;
 public interface IBecasService {
 
     BecaDTO newBeca(FormularioDTO formularioDTO) throws ResourceNotFoundException;
-    BecaDTO findByAlumno(Integer id);
-    BecaDTO findById(Integer id);
+    BecaDTO findById(Integer id) throws ResourceNotFoundException;
+    BecaDTO findByAlumno(Integer id) throws ResourceNotFoundException;
+    List<BecaDTO> findByInstituto(Integer cue) throws ResourceNotFoundException;
+    boolean deleteById(Integer id) throws ResourceNotFoundException;
 }
