@@ -1,11 +1,14 @@
 package com.modeladosemanticos.sistemadebecas.controller;
 
-import com.modeladosemanticos.sistemadebecas.dto.AlumnoDTO;
+import com.modeladosemanticos.sistemadebecas.dto.*;
+import com.modeladosemanticos.sistemadebecas.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.modeladosemanticos.sistemadebecas.service.BecasService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/beca")
@@ -22,6 +25,16 @@ public class BecasController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @GetMapping(path = "/alumno/{id}")
+    public ResponseEntity<BecaDTO> findByAlumno(@PathVariable Integer id){
+        return new ResponseEntity(becaSrv.findByAlumno(id), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<BecaDTO> findById(@PathVariable Integer id) {
+        return new ResponseEntity(becaSrv.findById(id), HttpStatus.OK);
     }
 
 }

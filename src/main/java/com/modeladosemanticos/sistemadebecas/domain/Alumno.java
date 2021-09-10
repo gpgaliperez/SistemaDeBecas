@@ -33,7 +33,7 @@ public class Alumno {
     private Turno turno;
     private Integer grado;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nro_beca")
     private Beca beca;
 
@@ -41,11 +41,11 @@ public class Alumno {
     @JoinColumn(name = "student_id")
     private Instituto instituto;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "sibling_id")
     private List<Hermano> hermano;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
     private List<Padre> padre;
 

@@ -14,7 +14,12 @@ import com.modeladosemanticos.sistemadebecas.repository.AlumnoRepository;
 import com.modeladosemanticos.sistemadebecas.repository.BecasRepository;
 import com.modeladosemanticos.sistemadebecas.repository.InstitutoRepository;
 import org.dozer.DozerBeanMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BecasService implements IBecasService{
@@ -68,12 +73,42 @@ public class BecasService implements IBecasService{
         return mapper.map(newBeca, BecaDTO.class);
     }
 
+    public BecaDTO findByAlumno(Integer id){
+        try{
+            if(alumnoRepository.findById(id).isPresent()){
+                Alumno a = alumnoRepository.findById(id).get();
+
+                if(becasRepository.findByAlumno(a).isPresent())
+                    return mapper.map(becasRepository.findByAlumno(a).get(), BecaDTO.class);
+                else
+                    return null;
+            }else{
+                return null;
+            }
+        } catch ( Exception exception){
+            System.out.println(exception.getMessage());
+            return null;
+        }
+    }
+
+    public BecaDTO findById(Integer id){
+        try{
+            if(becasRepository.findById(id).isPresent())
+                return mapper.map(becasRepository.findById(id).get(), BecaDTO.class);
+            else
+                return null;
+        } catch ( Exception exception){
+            System.out.println(exception.getMessage());
+            return null;
+        }
+    }
+
+
     /*
     HACER QUERY
     Para devolver cantidad de hermanos
     Para devolver la resta entre ingresos-gastos
     SETEAR TODAS LAS BECAS CREADAS COMO EN REVISIÓN
      */
-
 
 }
