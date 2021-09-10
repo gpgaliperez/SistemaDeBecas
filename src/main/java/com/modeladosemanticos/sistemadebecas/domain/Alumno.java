@@ -8,7 +8,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Alumno {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

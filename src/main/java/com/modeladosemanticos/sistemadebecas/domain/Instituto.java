@@ -21,5 +21,6 @@ public class Instituto {
     @OneToMany(mappedBy = "instituto", targetEntity = Alumno.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Alumno> alumnos;
 
+}
 
 
