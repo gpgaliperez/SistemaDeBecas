@@ -17,5 +17,27 @@ public class FormularioDTO {
 
 
 
+    public AlumnoDTO getAlumno() {
+        return alumno;
+    }
 
+    public void setAlumno(AlumnoDTO alumno) {
+        this.alumno = alumno;
+    }
+
+    public Double getDiferenciaIngresosGastos() {
+        return diferenciaIngresosGastos;
+    }
+
+    public void setDiferenciaIngresosGastos(Double diferenciaIngresosGastos) {
+        this.diferenciaIngresosGastos = diferenciaIngresosGastos;
+    }
+
+    public Boolean getPoseeEnfermedad() {
+        return poseeEnfermedad;
+    }
+
+    public void setPoseeEnfermedad(Boolean poseeEnfermedad) {
+        this.poseeEnfermedad = poseeEnfermedad;
+    }
 }
