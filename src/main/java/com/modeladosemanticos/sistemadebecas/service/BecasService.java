@@ -4,6 +4,8 @@ import com.modeladosemanticos.sistemadebecas.domain.Alumno;
 import com.modeladosemanticos.sistemadebecas.domain.Beca;
 import com.modeladosemanticos.sistemadebecas.domain.Hermano;
 import com.modeladosemanticos.sistemadebecas.domain.Padre;
+import com.modeladosemanticos.sistemadebecas.domain.enums.EstadoBeca;
+import com.modeladosemanticos.sistemadebecas.domain.enums.TipoBeca;
 import com.modeladosemanticos.sistemadebecas.dto.AlumnoDTO;
 import com.modeladosemanticos.sistemadebecas.dto.BecaDTO;
 import com.modeladosemanticos.sistemadebecas.dto.FormularioDTO;
@@ -17,13 +19,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class BecasService implements IBecasService{
 
-    private BecasRepository repository;
+    private BecasRepository becasRepository;
+    private AlumnoRepository alumnoRepository;
+    private InstitutoRepository institutoRepository;
     DozerBeanMapper mapper;
 
 
-    public BecasService(BecasRepository repository, DozerBeanMapper mapper){
-        this.repository = repository;
-        this.mapper = mapper;
+    public BecasService(BecasRepository repository, InstitutoRepository institutoRepository){
+        this.becasRepository = repository;
+        this.institutoRepository = institutoRepository;
+        this.mapper = new DozerBeanMapper();
     }
 
     public BecaDTO newBeca(FormularioDTO formularioDTO) throws ResourceNotFoundException {

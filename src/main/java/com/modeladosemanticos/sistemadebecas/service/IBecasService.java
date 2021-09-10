@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface IBecasService {
 
-    BecaDTO newBeca(AlumnoDTO formularioDTO);
+    BecaDTO newBeca(FormularioDTO formularioDTO) throws ResourceNotFoundException;
+    BecaDTO findByAlumno(Integer id);
+    BecaDTO findById(Integer id);
 }

@@ -15,8 +15,13 @@ public class BecasController {
     BecasService becaSrv;
 
     @PostMapping("/newBeca")
-    public ResponseEntity<?> newBeca(@RequestBody AlumnoDTO alumnoDTO){
-        return new ResponseEntity(becaSrv.newBeca(alumnoDTO), HttpStatus.OK);
+    public ResponseEntity<?> newBeca(@RequestBody FormularioDTO formularioDTO){
+        try {
+            return new ResponseEntity(becaSrv.newBeca(formularioDTO), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
