@@ -15,6 +15,8 @@ import java.util.List;
 @Entity
 public class Instituto {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Integer cue;
     private Integer clave;
 

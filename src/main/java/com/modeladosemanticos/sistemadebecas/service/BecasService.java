@@ -1,15 +1,12 @@
 package com.modeladosemanticos.sistemadebecas.service;
 
-import com.modeladosemanticos.sistemadebecas.controller.OntologiasController;
-import com.modeladosemanticos.sistemadebecas.domain.Alumno;
-import com.modeladosemanticos.sistemadebecas.domain.Beca;
-import com.modeladosemanticos.sistemadebecas.domain.Hermano;
-import com.modeladosemanticos.sistemadebecas.domain.Padre;
+import com.modeladosemanticos.sistemadebecas.domain.*;
 import com.modeladosemanticos.sistemadebecas.domain.enums.EstadoBeca;
 import com.modeladosemanticos.sistemadebecas.dto.AlumnoDTO;
 import com.modeladosemanticos.sistemadebecas.dto.BecaDTO;
 import com.modeladosemanticos.sistemadebecas.dto.FormularioDTO;
-import com.modeladosemanticos.sistemadebecas.exceptions.ResourceNotFoundException;
+import com.modeladosemanticos.sistemadebecas.dto.PadreDTO;
+import com.modeladosemanticos.sistemadebecas.exceptions.CustomException;
 import com.modeladosemanticos.sistemadebecas.repository.AlumnoRepository;
 import com.modeladosemanticos.sistemadebecas.repository.BecasRepository;
 import com.modeladosemanticos.sistemadebecas.repository.InstitutoRepository;
@@ -18,8 +15,10 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,23 +26,29 @@ public class BecasService implements IBecasService{
 
     private BecasRepository becasRepository;
     private AlumnoRepository alumnoRepository;
+    private OntologiasService ontology;
     private InstitutoRepository institutoRepository;
     DozerBeanMapper mapper;
 
 
-    public BecasService(BecasRepository repository, InstitutoRepository institutoRepository){
+    public BecasService(BecasRepository repository, InstitutoRepository institutoRepository, AlumnoRepository alumnoRepository){
         this.becasRepository = repository;
+        this.alumnoRepository = alumnoRepository;
         this.institutoRepository = institutoRepository;
         this.mapper = new DozerBeanMapper();
     }
 
-    public BecaDTO newBeca(FormularioDTO formularioDTO) throws ResourceNotFoundException {
+    public BecaDTO newBeca(FormularioDTO formularioDTO) throws CustomException {
         AlumnoDTO alumnoDTO = formularioDTO.getAlumno();
+        Instituto instituto;
+        Optional institutoOptional = institutoRepository.findById(alumnoDTO.getInstituto().getCue());
 
         //VALIDAR EXISTENCIA INSTITUTO
-        if(!institutoRepository.findById(alumnoDTO.getInstituto().getCue()).isPresent()){
-            throw new ResourceNotFoundException("Error, el instituto con cue:" +
+        if(!institutoOptional.isPresent()){
+            throw new CustomException("Error, el instituto con cue:" +
                      alumnoDTO.getInstituto().getCue() + " no existe");
+        }else{
+            instituto = (Instituto) institutoOptional.get();
         }
 
         List<Padre> padres = alumnoDTO.getPadre().stream().map( a -> mapper.map(alumnoDTO.getPadre(), Padre.class )).collect(Collectors.toList());
@@ -52,7 +57,7 @@ public class BecasService implements IBecasService{
         // CALCULAR GASTOS
         Double ingresoFamiliar = 0.0;
         Double diferenciaIngesosGastos = 0.0;
-        for(Padre p: padres){
+        for(PadreDTO p: alumnoDTO.getPadre()){
             ingresoFamiliar+= p.getIngresosNetos();
         }
         diferenciaIngesosGastos = ingresoFamiliar - formularioDTO.getGastosPorEnfermedad();
@@ -64,6 +69,7 @@ public class BecasService implements IBecasService{
         Alumno newAlumno = mapper.map(alumnoDTO, Alumno.class);
         newAlumno.setHermano(hermanos);
         newAlumno.setPadre(padres);
+        newAlumno.setInstituto(instituto);
 
         Beca newBeca = new Beca(formularioDTO.getPoseeEnfermedad(),
                 diferenciaIngesosGastos, EstadoBeca.ENESTUDIO,
@@ -72,26 +78,24 @@ public class BecasService implements IBecasService{
         newAlumno.setBeca(newBeca);
         becasRepository.save(newBeca);
 
-
         HTTPRepository repository = new HTTPRepository("http://localhost:7200/repositories/Semantica");
         RepositoryConnection connection = repository.getConnection();
 
-
-        OntologiasController ontology = new OntologiasController(connection);
+        ontology = new OntologiasService(connection);
         ontology.guardarData(alumnoRepository.save(newAlumno));
 
 
         return mapper.map(newBeca, BecaDTO.class);
     }
 
-    public BecaDTO findById(Integer id) throws ResourceNotFoundException {
+    public BecaDTO findById(Integer id) throws CustomException {
         if(becasRepository.findById(id).isPresent())
             return mapper.map(becasRepository.findById(id).get(), BecaDTO.class);
         else
-            throw new ResourceNotFoundException("Error, la beca de id: " +id+ " no se encontró.");
+            throw new CustomException("Error, la beca de id: " +id+ " no se encontró.");
     }
 
-    public BecaDTO findByAlumno(Integer id) throws ResourceNotFoundException {
+    public BecaDTO findByAlumno(Integer id) throws CustomException {
         if(alumnoRepository.findById(id).isPresent()){
             Alumno a = alumnoRepository.findById(id).get();
 
@@ -100,11 +104,11 @@ public class BecasService implements IBecasService{
 
             return null;
         }else{
-            throw new ResourceNotFoundException("Error, el alumno de id: " +id+ " no se encontró.");
+            throw new CustomException("Error, el alumno de id: " +id+ " no se encontró.");
         }
     }
 
-    public List<BecaDTO> findByInstituto(Integer cue) throws ResourceNotFoundException {
+    public List<BecaDTO> findByInstituto(Integer cue) throws CustomException {
         if(institutoRepository.findById(cue).isPresent()) {
             List<Alumno> alumnosDeInstituto = institutoRepository.findById(cue).get().getAlumnos();
 
@@ -113,17 +117,17 @@ public class BecasService implements IBecasService{
 
             return becas;
         }else {
-            throw new ResourceNotFoundException("Error, no se encontró el instituto de cue " + cue);
+            throw new CustomException("Error, no se encontró el instituto de cue " + cue);
         }
     }
 
-    public boolean deleteById(Integer id) throws ResourceNotFoundException{
+    public boolean deleteById(Integer id) throws CustomException{
         if(becasRepository.findById(id).isPresent()) {
             becasRepository.delete(becasRepository.findById(id).get());
 
             return !becasRepository.findById(id).isPresent();
         }else {
-            throw new ResourceNotFoundException("Error, la beca de id: " + id + " no existe.");
+            throw new CustomException("Error, la beca de id: " + id + " no existe.");
         }
     }
 }

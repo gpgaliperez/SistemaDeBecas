@@ -11,6 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorDTO {
-  private String info;
+public class ErroresDTO {
+    private List<String> errores;
 }

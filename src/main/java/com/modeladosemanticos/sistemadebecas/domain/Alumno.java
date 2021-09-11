@@ -19,7 +19,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Alumno {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Integer id;
     private String nombre;
     private String apellido;
@@ -40,15 +42,13 @@ public class Alumno {
     private Beca beca;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "instituto_id")
     private Instituto instituto;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sibling_id")
+    @OneToMany(mappedBy = "alumno", targetEntity = Hermano.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Hermano> hermano;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_id")
+    @OneToMany(mappedBy = "alumno", targetEntity = Padre.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Padre> padre;
 
 }

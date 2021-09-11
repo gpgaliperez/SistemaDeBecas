@@ -12,7 +12,7 @@ public class FormularioDTO {
     @NotNull(message= "Por favor, ingrese los datos de un alumno.")
     private AlumnoDTO alumno;
 
-    @NotEmpty(message = "Por favor, ingrese los gastos por enfermedad.")
+    @NotNull(message = "Por favor, ingrese los gastos por enfermedad.")
     private Double gastosPorEnfermedad;
 
     @NotNull(message= "Por favor, ingrese si posee una enfermedad.")

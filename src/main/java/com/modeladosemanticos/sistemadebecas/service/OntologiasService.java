@@ -1,4 +1,4 @@
-package com.modeladosemanticos.sistemadebecas.controller;
+package com.modeladosemanticos.sistemadebecas.service;
 import com.modeladosemanticos.sistemadebecas.domain.Alumno;
 import com.modeladosemanticos.sistemadebecas.utils.QueryUtil;
 import com.modeladosemanticos.sistemadebecas.utils.UpdateUtil;
@@ -13,12 +13,12 @@ import org.eclipse.rdf4j.query.impl.SimpleBinding;
 
 
 
-public class OntologiasController {
+public class OntologiasService {
 
 
     private RepositoryConnection connection;
 
-   public OntologiasController(RepositoryConnection connection) {
+   public OntologiasService(RepositoryConnection connection) {
         this.connection = connection;
     }
 
@@ -87,7 +87,7 @@ public class OntologiasController {
                 ));
     }
 
-    public void listScholarshipForStudent(Integer idStudent) {
+    public void listaDeBecas(Integer idStudent) {
 
         TupleQueryResult result = QueryUtil.evaluateSelectQuery(connection,
                 "PREFIX onto: <http://www.semanticweb.org/palov/ontologies/2021/6/untitled-ontology-6#>" +

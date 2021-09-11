@@ -15,8 +15,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 public class Beca {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Integer id;
     private Boolean poseeEnfermedad;
     private Double diferenciaIngresosGastos;
