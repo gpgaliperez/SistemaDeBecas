@@ -55,8 +55,7 @@ public class BecasService implements IBecasService{
         for(Padre p: padres){
             ingresoFamiliar+= p.getIngresosNetos();
         }
-        diferenciaIngesosGastos = ingresoFamiliar - formularioDTO.getDiferenciaIngresosGastos();
-        //FIXME - deberíamos pasarles gastos en el FormularioDTO?
+        diferenciaIngesosGastos = ingresoFamiliar - formularioDTO.getGastosPorEnfermedad();
 
         //CONTAR CANT HERMANOS
         Integer cantHermanos = hermanos.size();
