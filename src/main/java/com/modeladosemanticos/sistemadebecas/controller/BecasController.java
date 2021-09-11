@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.modeladosemanticos.sistemadebecas.service.BecasService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/beca")
 public class BecasController {
@@ -16,7 +18,7 @@ public class BecasController {
     BecasService becaSrv;
 
     @PostMapping("/newBeca")
-    public ResponseEntity<?> newBeca(@RequestBody FormularioDTO formularioDTO){
+    public ResponseEntity<?> newBeca(@RequestBody @Valid FormularioDTO formularioDTO){
         try {
             return new ResponseEntity(becaSrv.newBeca(formularioDTO), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {

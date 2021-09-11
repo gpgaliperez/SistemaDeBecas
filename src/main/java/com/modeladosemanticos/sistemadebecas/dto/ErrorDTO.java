@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstitutoDTO {
-    @NotBlank(message = "El instituto no puede tener un cue vacio.")
-    private Integer cue;
+public class ErrorDTO {
+   private List<String> errores;
 }

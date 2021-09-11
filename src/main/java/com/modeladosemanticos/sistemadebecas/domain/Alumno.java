@@ -1,5 +1,6 @@
 package com.modeladosemanticos.sistemadebecas.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.modeladosemanticos.sistemadebecas.domain.enums.Turno;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +32,6 @@ public class Alumno {
     private Integer codigoPostal;
     private Integer telefono;
     private String email;
-    @Enumerated(EnumType.STRING)
     private Turno turno;
     private Integer grado;
 

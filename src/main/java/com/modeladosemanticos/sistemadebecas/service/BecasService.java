@@ -1,5 +1,6 @@
 package com.modeladosemanticos.sistemadebecas.service;
 
+import com.modeladosemanticos.sistemadebecas.controller.OntologiasController;
 import com.modeladosemanticos.sistemadebecas.domain.Alumno;
 import com.modeladosemanticos.sistemadebecas.domain.Beca;
 import com.modeladosemanticos.sistemadebecas.domain.Hermano;
@@ -13,6 +14,8 @@ import com.modeladosemanticos.sistemadebecas.repository.AlumnoRepository;
 import com.modeladosemanticos.sistemadebecas.repository.BecasRepository;
 import com.modeladosemanticos.sistemadebecas.repository.InstitutoRepository;
 import org.dozer.DozerBeanMapper;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,6 +72,16 @@ public class BecasService implements IBecasService{
 
         newAlumno.setBeca(newBeca);
         becasRepository.save(newBeca);
+
+
+        HTTPRepository repository = new HTTPRepository("http://localhost:7200/repositories/Semantica");
+        RepositoryConnection connection = repository.getConnection();
+
+
+        OntologiasController ontology = new OntologiasController(connection);
+        ontology.guardarData(alumnoRepository.save(newAlumno));
+
+
         return mapper.map(newBeca, BecaDTO.class);
     }
 
