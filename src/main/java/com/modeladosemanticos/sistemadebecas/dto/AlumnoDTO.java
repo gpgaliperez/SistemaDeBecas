@@ -28,7 +28,7 @@ public class AlumnoDTO {
     private String apellido;
     @NotNull(message = "El dni no puede estar vacio.")
     @Size(max = 10)
-    private Integer dni;
+    private String dni;
     @NotNull(message = "El cuil no puede estar vacio.")
     @Size(max = 11)
     private String cuil;

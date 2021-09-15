@@ -7,19 +7,15 @@ import com.modeladosemanticos.sistemadebecas.dto.BecaDTO;
 import com.modeladosemanticos.sistemadebecas.dto.FormularioDTO;
 import com.modeladosemanticos.sistemadebecas.dto.PadreDTO;
 import com.modeladosemanticos.sistemadebecas.exceptions.CustomException;
-import com.modeladosemanticos.sistemadebecas.repository.AlumnoRepository;
-import com.modeladosemanticos.sistemadebecas.repository.BecasRepository;
-import com.modeladosemanticos.sistemadebecas.repository.InstitutoRepository;
+import com.modeladosemanticos.sistemadebecas.repository.*;
 import org.dozer.DozerBeanMapper;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BecasService implements IBecasService{
@@ -29,7 +25,6 @@ public class BecasService implements IBecasService{
     private OntologiasService ontology;
     private InstitutoRepository institutoRepository;
     DozerBeanMapper mapper;
-
 
     public BecasService(BecasRepository repository, InstitutoRepository institutoRepository, AlumnoRepository alumnoRepository){
         this.becasRepository = repository;
@@ -51,8 +46,10 @@ public class BecasService implements IBecasService{
             instituto = (Instituto) institutoOptional.get();
         }
 
-        List<Padre> padres = alumnoDTO.getPadre().stream().map( a -> mapper.map(alumnoDTO.getPadre(), Padre.class )).collect(Collectors.toList());
-        List<Hermano> hermanos = alumnoDTO.getHermano().stream().map( a -> mapper.map(alumnoDTO.getHermano(), Hermano.class)).collect(Collectors.toList());
+        List<Padre> padres = new ArrayList<>();
+        List<Hermano> hermanos = new ArrayList<>();
+        alumnoDTO.getPadre().forEach(padre -> padres.add(mapper.map(padre, Padre.class )));
+        alumnoDTO.getHermano().forEach(hermano -> hermanos.add(mapper.map(hermano, Hermano.class )));
 
         // CALCULAR GASTOS
         Double ingresoFamiliar = 0.0;

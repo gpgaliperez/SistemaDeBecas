@@ -25,14 +25,14 @@ public class Alumno {
     private Integer id;
     private String nombre;
     private String apellido;
-    private Integer dni;
+    private String dni;
     private String cuil;
     private Date fechaNacimiento;
-    private String nacionalidad; //debería ser enum?
-    private String localidad; //debería ser enum?
+    private String nacionalidad;
+    private String localidad;
     private String domicilio;
-    private Integer codigoPostal;
-    private Integer telefono;
+    private String codigoPostal;
+    private String telefono;
     private String email;
     private Turno turno;
     private Integer grado;
