@@ -75,11 +75,13 @@ public class BecasService implements IBecasService{
         newAlumno.setBeca(newBeca);
         becasRepository.save(newBeca);
 
+
         HTTPRepository repository = new HTTPRepository("http://localhost:7200/repositories/test");
         RepositoryConnection connection = repository.getConnection();
+        //connection.clear();
         ontology = new OntologiasService(connection);
         ontology.guardarData(alumnoRepository.save(newAlumno));
-        //connection.close();
+
 
         return mapper.map(newBeca, BecaDTO.class);
     }

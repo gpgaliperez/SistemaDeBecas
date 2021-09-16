@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.modeladosemanticos.sistemadebecas.service.BecasService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(maxAge = 86400)
 @RestController
@@ -41,7 +42,7 @@ public class BecasController {
 
     @CrossOrigin(maxAge = 86400)
     @GetMapping(path = "/instituto/{cue}")
-    public ResponseEntity<BecaDTO> findByInstituto(@PathVariable Integer cue) throws CustomException {
+    public ResponseEntity<List<BecaDTO>> findByInstituto(@PathVariable Integer cue) throws CustomException {
         return new ResponseEntity(becaSrv.findByInstituto(cue), HttpStatus.OK);
 
     }
