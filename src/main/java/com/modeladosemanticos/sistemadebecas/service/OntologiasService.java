@@ -15,10 +15,9 @@ import org.eclipse.rdf4j.query.impl.SimpleBinding;
 
 public class OntologiasService {
 
-
     private RepositoryConnection connection;
 
-   public OntologiasService(RepositoryConnection connection) {
+    public OntologiasService(RepositoryConnection connection) {
         this.connection = connection;
     }
 
@@ -57,7 +56,7 @@ public class OntologiasService {
                 ));
     }
 
-    private void guardarBeca(Integer id, Integer count, Double income) {
+    private void guardarBeca(Integer id, Integer count, Double differenceIncome) {
 
         IRI becaURI = uriBeca(id);
 
@@ -66,8 +65,8 @@ public class OntologiasService {
                         "PREFIX db: <http://www.semanticweb.org/palov/ontologies/2021/6/untitled-ontology-6#>" +
                                 "INSERT DATA {" +
                                 "<%s> db:idSolicitud " + id + "." +
-                                "<%s> db:cantidadHermanos " + count + "." +
-                                "<%s> db:ingresosNetos " + "\"" + income + "\""+ "^^xsd:double" +"." +
+                                "<%s> db:CantidadHermanos " + count + "." +
+                                "<%s> db:DiferenciaIngresoGastos " + "\"" + differenceIncome + "\""+ "^^xsd:double" +"." +
                                 "<%s> rdf:type db:Solicitud " +
                                 "}", becaURI, becaURI, becaURI, becaURI
                 ));
@@ -108,10 +107,10 @@ public class OntologiasService {
     }
 
     private IRI uriAlumno(Integer id) {
-        return SimpleValueFactory.getInstance().createIRI("http://www.semanticweb.org/lenovo/ontologies/2021/5/Semantica#Postulante" + id);
+        return SimpleValueFactory.getInstance().createIRI("http://www.semanticweb.org/palov/ontologies/2021/6/untitled-ontology-6#Postulante" + id);
     }
 
     private IRI uriBeca(Integer id) {
-        return SimpleValueFactory.getInstance().createIRI("http://www.semanticweb.org/lenovo/ontologies/2021/6/Semantica#Solicitud" + id);
+        return SimpleValueFactory.getInstance().createIRI("http://www.semanticweb.org/palov/ontologies/2021/6/untitled-ontology-6#Solicitud" + id);
     }
 }
